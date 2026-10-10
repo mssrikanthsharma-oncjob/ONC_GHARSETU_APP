@@ -1,0 +1,24 @@
+{
+  "project_type": "Full-stack monorepo — Node/Express REST API server + React 18 Vite SPA client",
+  "language": "JavaScript (no TypeScript)",
+  "build_system": "npm workspaces are NOT used; each workspace (root, server, client) has its own package.json and npm install must be run separately. Root uses concurrently to run both processes. Vite for client bundling.",
+  "test_framework": "None specified. Smoke-test by running the dev server and exercising the UI manually. Build correctness verified via `npm run build` in client/.",
+  "build_command": "cd /Users/oncrealtypartners/ONC_GHARSETU_APP/client && npm run build",
+  "test_command": "cd /Users/oncrealtypartners/ONC_GHARSETU_APP && npm run dev   (starts both server on :3001 and client on :5173)",
+  "verification_instructions": "1. cd /Users/oncrealtypartners/ONC_GHARSETU_APP/server && npm install && node index.js — expect 'Server running on port 3001'. 2. In another terminal: cd /Users/oncrealtypartners/ONC_GHARSETU_APP/client && npm install && npm run build — expect 'built in Xs'. 3. curl http://localhost:3001/api/settings — expect JSON. 4. curl http://localhost:3001/api/customers — expect JSON array.",
+  "snapshot_or_generated_files": "server/gharsetu.db is created at runtime by database.js; do not commit it. client/dist/ is the build output; do not commit it.",
+  "environment_constraints": "Node 22.20.0, npm 10.9.3. macOS darwin. Workspace root: /Users/oncrealtypartners/ONC_GHARSETU_APP. Always use absolute paths in shell commands — relative paths will resolve against the parent workspace, not the project directory.",
+  "contribution_requirements": "Greenfield project — no AGENTS.md or CONTRIBUTING.md. Follow the plan in plan.md. Each FEAT must leave the codebase in a runnable state before moving on.",
+  "key_patterns": "Greenfield — no existing patterns. Conventions to follow: Express router pattern (router.get/post/put/delete), JSON column fields stored as TEXT in SQLite and parsed with JSON.parse/JSON.stringify in route handlers, React functional components with hooks, Tailwind utility classes, primary color #1e3a5f / accent #f0a500.",
+  "relevant_files": [
+    "/Users/oncrealtypartners/ONC_GHARSETU_APP/.agents/tasks/plan.md",
+    "/Users/oncrealtypartners/ONC_GHARSETU_APP/server/database.js",
+    "/Users/oncrealtypartners/ONC_GHARSETU_APP/server/routes/matchmaking.js",
+    "/Users/oncrealtypartners/ONC_GHARSETU_APP/server/routes/deals.js",
+    "/Users/oncrealtypartners/ONC_GHARSETU_APP/client/src/api/index.js",
+    "/Users/oncrealtypartners/ONC_GHARSETU_APP/client/src/App.jsx",
+    "/Users/oncrealtypartners/ONC_GHARSETU_APP/client/src/pages/Matchmaking.jsx",
+    "/Users/oncrealtypartners/ONC_GHARSETU_APP/client/src/pages/Deals.jsx"
+  ],
+  "directory_structure": "ONC_GHARSETU_APP/ — project root with root package.json (concurrently). server/ — Express API, database.js (better-sqlite3 + schema + seeds), routes/ (customers.js, properties.js, deals.js, matchmaking.js, settings.js). client/ — Vite React app, src/api/index.js (all fetch helpers), src/components/ (Navbar, Modal, Toast, LoadingSpinner), src/pages/ (Customers, Properties, Matchmaking, Deals, Settings)."
+}

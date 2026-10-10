@@ -1,0 +1,30 @@
+{
+  "id": "FEAT-003",
+  "type": "feat",
+  "description": "Implement the remaining three page components — Matchmaking, Deals, Settings — and verify the full integrated app runs. Depends on FEAT-001 (API) and FEAT-002 (shared components and client scaffold). This FEAT completes the app.",
+  "status": "pending",
+  "steps": [
+    "Create /Users/oncrealtypartners/ONC_GHARSETU_APP/client/src/pages/Matchmaking.jsx — functional component. Accept optional URL query param buyer_id (from useSearchParams) to pre-select buyer. State: buyers list (customers filtered to type='buyer' or 'both'), selectedBuyerId, results, loading, showDealModal, selectedMatch. On mount: load buyers via getCustomers({type:'buyer'}) — note: fetch all and filter client-side because API type param may need 'both' too; fetch getCustomers() and filter where type==='buyer'||type==='both'. Layout: two-column (left 1/3, right 2/3). Left panel: h2 'Find Matches', buyer select dropdown showing 'Name (type)' options, 'Find Matches' button (primary bg, calls findMatches({buyer_id:selectedBuyerId}), sets loading). Right panel: if no results yet show placeholder 'Select a buyer and click Find Matches'. If results empty show 'No matches found (score below 20%)'. For each result render a card: property title+locality+city, price formatted, BHK+area, score badge (≥80 green, 50-79 yellow, 20-49 orange) showing 'XX%', AI insight text in italic gray. Expandable accordion 'Score Breakdown': shows Budget X/30, Location X/25, Type X/20, BHK X/15, Amenities X/10. 'Create Deal' button on each card: opens a deal creation modal pre-filled with property_id and buyer_customer_id. Deal creation modal (inline or reuse Modal component): fields property (pre-filled readonly), buyer (pre-filled readonly), seller customer selector, deal_date, deal_amount, brokerage_type, buyer_brokerage_pct, seller_brokerage_pct (amounts auto-calc live), brokers list (add row: name, share_pct, calculated_amount), notes. On save: createDeal(data), show success toast, navigate to /deals.",
+
+    "Create /Users/oncrealtypartners/ONC_GHARSETU_APP/client/src/pages/Deals.jsx — functional component. State: deals, stats, loading, filters (status, month), showModal, selectedDeal, customers list, properties list. On mount: load getDeals(filters), getDealStats(), getCustomers(), getProperties() (needed for selectors). Stats cards row at top: 'This Month' brokerage (formatted with currency), 'All Time' brokerage, 'Total Deals' count, 'Top Locality' name. Cards styled: white bg, shadow, accent-colored figure. Deals table columns: Property title, Buyer name, Seller name, Deal Date, Amount, Total Brokerage, Brokerage Type badge, Status badge, Actions (Edit, Delete). Brokerage type badges: buyer_only (blue), seller_only (purple), both (green), split (orange). Status badges: negotiation (yellow), closed (green), cancelled (red). 'Add Deal' button opens modal. Add/Edit Deal modal (size='xl'): Section 1 — Property selector (select from available properties + pre-fill price), Buyer selector, Seller selector, Deal Date, Deal Amount. Section 2 — Brokerage Type radio group. Conditionally show buyer_brokerage_pct input (if buyer_only or both or split), seller_brokerage_pct input (if seller_only or both or split). Live-calculated read-only fields: buyer_brokerage_amount = deal_amount * buyer_pct/100, seller_brokerage_amount = deal_amount * seller_pct/100, total = sum. Section 3 — Brokers: 'Add Broker' button appends row {name input, share_pct input, auto-calc amount = total_brokerage * share_pct/100}. Remove row button. Section 4 — Notes textarea, Status select. On save: createDeal or updateDeal, refresh, toast.",
+
+    "Create /Users/oncrealtypartners/ONC_GHARSETU_APP/client/src/pages/Settings.jsx — functional component. State: settings object, loading, saving. On mount: getSettings(), populate form fields. Fields: company_name (text), company_address (textarea), company_phone (text), default_buyer_brokerage_pct (number, step 0.1, min 0 max 10), default_seller_brokerage_pct (number, step 0.1, min 0 max 10), currency_symbol (text, maxLength 3). Layout: centered card max-w-lg. Each field: label + input with Tailwind styling. Save button: calls saveSettings(formData), shows toast 'Settings saved'. Info box below: 'These defaults are used when creating new deals.'",
+
+    "Run the full build to confirm all three pages import correctly: cd /Users/oncrealtypartners/ONC_GHARSETU_APP/client && npm run build",
+
+    "Integration smoke-test: start server (cd /Users/oncrealtypartners/ONC_GHARSETU_APP/server && node index.js &), verify curl http://localhost:3001/api/customers returns data, verify curl http://localhost:3001/api/properties returns data, verify curl -X POST http://localhost:3001/api/matchmaking/find -H 'Content-Type: application/json' -d '{\"buyer_id\":1}' returns valid JSON, kill the server process."
+  ],
+  "acceptance_criteria": [
+    "cd /Users/oncrealtypartners/ONC_GHARSETU_APP/client && npm run build exits with code 0",
+    "dist/index.html exists and dist/assets/ contains bundled JS",
+    "curl http://localhost:3001/api/matchmaking/find (POST with buyer_id) returns JSON array without 500 error",
+    "curl http://localhost:3001/api/deals/stats returns JSON with total_brokerage_month, total_brokerage_alltime, deal_count keys",
+    "All five pages (/, /properties, /matchmaking, /deals, /settings) render without React errors when app is running"
+  ],
+  "verification": [
+    "cd /Users/oncrealtypartners/ONC_GHARSETU_APP/client && npm run build && test -f dist/index.html && echo CLIENT_BUILD_OK",
+    "cd /Users/oncrealtypartners/ONC_GHARSETU_APP/server && node index.js & sleep 2 && curl -sf http://localhost:3001/api/customers > /dev/null && curl -sf http://localhost:3001/api/deals/stats > /dev/null && echo SERVER_OK; kill %1 2>/dev/null; true"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

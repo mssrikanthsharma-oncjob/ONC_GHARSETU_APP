@@ -1,0 +1,7 @@
+{
+  "task_id": "task-onc-gharsetu-crm",
+  "task_description": "Build the ONC GHARSETU realty CRM app — full-stack monorepo with React 18 + Vite + TailwindCSS client and Node/Express + better-sqlite3 server. Five tabs: Customers, Properties, Matchmaking, Deals, Settings. Matchmaking with percentage scoring, brokerage auto-calculation, AI-style insights.",
+  "status": "pending",
+  "feature_order": ["FEAT-001", "FEAT-002", "FEAT-003"],
+  "blocked_reason": null
+}

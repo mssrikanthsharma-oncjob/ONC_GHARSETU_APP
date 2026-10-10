@@ -1,0 +1,50 @@
+{
+  "id": "FEAT-002",
+  "type": "feat",
+  "description": "Scaffold the React client: Vite config, Tailwind config, index.html, all shared components (Navbar, Modal, Toast, LoadingSpinner), the API layer (src/api/index.js), App.jsx router, and the Customers and Properties pages. Depends on FEAT-001 for the API contract; independent of FEAT-003 (Matchmaking/Deals/Settings pages).",
+  "status": "pending",
+  "steps": [
+    "Create /Users/oncrealtypartners/ONC_GHARSETU_APP/client/package.json — name 'gharsetu-client', dependencies: react@^18, react-dom@^18, react-router-dom@^6, axios@^1; devDependencies: vite@^5, @vitejs/plugin-react@^4, tailwindcss@^3, postcss@^8, autoprefixer@^10; scripts: 'dev': 'vite', 'build': 'vite build', 'preview': 'vite preview'",
+
+    "Create /Users/oncrealtypartners/ONC_GHARSETU_APP/client/vite.config.js — import defineConfig and react plugin. Export config with plugins:[react()], server.proxy: { '/api': { target:'http://localhost:3001', changeOrigin:true } }",
+
+    "Create /Users/oncrealtypartners/ONC_GHARSETU_APP/client/tailwind.config.js — content: ['./index.html','./src/**/*.{js,jsx}']. theme.extend.colors: { primary:'#1e3a5f', accent:'#f0a500' }. plugins: []",
+
+    "Create /Users/oncrealtypartners/ONC_GHARSETU_APP/client/postcss.config.js — plugins: { tailwindcss:{}, autoprefixer:{} }",
+
+    "Create /Users/oncrealtypartners/ONC_GHARSETU_APP/client/index.html — standard HTML5 boilerplate, charset utf-8, viewport meta, title 'ONC GHARSETU', link to favicon (can be omitted), script type module src='/src/main.jsx', div id='root'",
+
+    "Create /Users/oncrealtypartners/ONC_GHARSETU_APP/client/src/index.css — @tailwind base; @tailwind components; @tailwind utilities; :root { --primary: #1e3a5f; --accent: #f0a500; }",
+
+    "Create /Users/oncrealtypartners/ONC_GHARSETU_APP/client/src/main.jsx — import React, ReactDOM, App, './index.css'. ReactDOM.createRoot(document.getElementById('root')).render(<React.StrictMode><App /></React.StrictMode>)",
+
+    "Create /Users/oncrealtypartners/ONC_GHARSETU_APP/client/src/api/index.js — axios instance with baseURL '/api'. Export: getCustomers({search,type,status}), getCustomer(id), createCustomer(data), updateCustomer(id,data), deleteCustomer(id), getProperties({locality,type,status,min_price,max_price}), getProperty(id), createProperty(data), updateProperty(id,data), deleteProperty(id), findMatches({buyer_id}), getDeals({status,month}), getDealStats(), getDeal(id), createDeal(data), updateDeal(id,data), deleteDeal(id), getSettings(), saveSettings(data). Each function returns response.data.",
+
+    "Create /Users/oncrealtypartners/ONC_GHARSETU_APP/client/src/components/Navbar.jsx — functional component. Top bar: bg-[#1e3a5f], logo text 'ONC GHARSETU' in text-[#f0a500] font-bold text-xl. Nav links using react-router-dom NavLink for: Customers (to='/'), Properties (to='/properties'), Matchmaking (to='/matchmaking'), Deals (to='/deals'), Settings (to='/settings'). Active link: border-b-2 border-[#f0a500] text-white font-semibold. Inactive: text-blue-200 hover:text-white.",
+
+    "Create /Users/oncrealtypartners/ONC_GHARSETU_APP/client/src/components/Modal.jsx — functional component accepting { isOpen, title, onClose, children, size='md' } props. Renders portal via ReactDOM.createPortal to document.body. Overlay: fixed inset-0 bg-black/50 z-50. Dialog: bg-white rounded-xl shadow-2xl, size variants (md: max-w-lg, lg: max-w-2xl, xl: max-w-4xl). Header with title and X button. Escape key and backdrop click call onClose. Returns null when !isOpen.",
+
+    "Create /Users/oncrealtypartners/ONC_GHARSETU_APP/client/src/components/Toast.jsx — create ToastContext with createContext. ToastProvider manages array of toasts [{id,message,type}] in useState. showToast(message, type='success') appends, setTimeout removes after 3000ms. useToast hook exports showToast. Toast display: fixed bottom-4 right-4 z-50, stack of colored divs (green for success, red for error, blue for info). Export ToastProvider and useToast.",
+
+    "Create /Users/oncrealtypartners/ONC_GHARSETU_APP/client/src/components/LoadingSpinner.jsx — centered div with an SVG spinner (animate-spin, stroke #1e3a5f) and optional 'Loading...' text. Accepts { size='md', fullPage=false } props. fullPage wraps in fixed inset-0 flex items-center justify-center bg-white/70.",
+
+    "Create /Users/oncrealtypartners/ONC_GHARSETU_APP/client/src/App.jsx — import BrowserRouter, Routes, Route from react-router-dom. Import ToastProvider, Navbar, and all 5 page components. Wrap everything in ToastProvider then BrowserRouter. Render Navbar above Routes. Routes: '/' → Customers, '/properties' → Properties, '/matchmaking' → Matchmaking, '/deals' → Deals, '/settings' → Settings.",
+
+    "Create /Users/oncrealtypartners/ONC_GHARSETU_APP/client/src/pages/Customers.jsx — functional component. State: customers list, loading, filters (search, type, status), showModal (add/edit), selectedCustomer, showMatchModal. On mount and filter change: call getCustomers(filters). Render: header row with 'Add Customer' button. Filter bar (search input, type select, status select). Table columns: Name, Phone, Email, Type badge, Budget, Status, Last Updated, Actions. Follow-up badge: if updated_at is >30 days ago show yellow pill '⏰ Follow up'. Action buttons: Edit (opens modal prefilled), Delete (confirm dialog), Find Matches (navigates to /matchmaking?buyer_id=id). Add/Edit modal fields: name*, phone*, email, type (buyer/seller/both), budget_min, budget_max, preferred_locations (comma-separated input displayed as tags), property_type (flat/house/plot/commercial), preferred_bhk (multi-select checkboxes: 1/2/3/4/4+), amenities_wishlist (comma-separated tags), notes, status. On save: createCustomer or updateCustomer, refresh list, show toast.",
+
+    "Create /Users/oncrealtypartners/ONC_GHARSETU_APP/client/src/pages/Properties.jsx — functional component. State: properties, loading, viewMode ('grid'|'list'), filters, showModal, selectedProperty. On mount/filter change: call getProperties(filters). Render: header with 'Add Property' + grid/list toggle buttons. Filter bar: locality text, type select, status select, price range inputs. Grid view: card per property showing title, locality+city, price (formatted with currency), BHK, area, furnishing badge, status badge, Edit/Delete buttons. List view: table with same data. AI price suggestion in the modal: when locality and type fields have values, call getProperties({locality,type}) and compute avg price/sqft from results, display as 'Avg ₹X/sqft in this area'. Add/Edit modal fields: title*, address*, locality*, city*, type*, price*, area_sqft*, bhk (1-5 select), floor, total_floors, age_years, amenities (tag input), parking (checkbox), furnishing (unfurnished/semi/fully), status, owner_name*, owner_phone*, notes. On save: createProperty or updateProperty, refresh, toast.",
+
+    "Run: cd /Users/oncrealtypartners/ONC_GHARSETU_APP/client && npm install && npm run build"
+  ],
+  "acceptance_criteria": [
+    "cd /Users/oncrealtypartners/ONC_GHARSETU_APP/client && npm run build exits with code 0 and produces dist/index.html",
+    "dist/assets/ contains at least one .js and one .css file",
+    "No console errors during build about missing modules or import failures"
+  ],
+  "verification": [
+    "cd /Users/oncrealtypartners/ONC_GHARSETU_APP/client && npm install && npm run build",
+    "test -f /Users/oncrealtypartners/ONC_GHARSETU_APP/client/dist/index.html && echo BUILD_OK"
+  ],
+  "blocked_reason": null,
+  "findings": ""
+}

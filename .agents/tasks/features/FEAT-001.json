@@ -1,0 +1,42 @@
+{
+  "id": "FEAT-001",
+  "type": "feat",
+  "description": "Scaffold the full project structure and implement the complete backend: root package.json, server package.json, Express entry point, SQLite database setup with schema + seeds, and all five API route files (customers, properties, deals, matchmaking, settings). This is the foundation; FEAT-002 and FEAT-003 depend on it.",
+  "status": "completed",
+  "steps": [
+    "Create /Users/oncrealtypartners/ONC_GHARSETU_APP/package.json — root manifest with devDependency 'concurrently@^8', scripts: 'dev': 'concurrently \\\"npm run dev --prefix server\\\" \\\"npm run dev --prefix client\\\"', 'install:all': 'npm install && npm install --prefix server && npm install --prefix client'",
+
+    "Create /Users/oncrealtypartners/ONC_GHARSETU_APP/server/package.json — name 'gharsetu-server', main 'index.js', dependencies: express@^4, better-sqlite3@^9, cors@^2, dotenv@^16; devDependencies: nodemon@^3; scripts: 'dev': 'nodemon index.js', 'start': 'node index.js'",
+
+    "Create /Users/oncrealtypartners/ONC_GHARSETU_APP/server/database.js — require better-sqlite3, open './gharsetu.db', run CREATE TABLE IF NOT EXISTS for all four tables (customers, properties, deals, settings) with the exact schema in plan.md. After table creation, check if customers table is empty and if so insert 5 sample customers (mix of buyer/seller/both types). Insert 5 sample properties. Insert 2 sample deals. Insert default settings rows (company_name, company_address, company_phone, default_buyer_brokerage_pct='2', default_seller_brokerage_pct='2', currency_symbol='₹'). Export the db object.",
+
+    "Create /Users/oncrealtypartners/ONC_GHARSETU_APP/server/routes/customers.js — Express Router. GET / supports query params search (LIKE on name/phone/email), type, status. GET /:id returns single customer. POST / inserts new customer (JSON.stringify array fields before insert, set created_at/updated_at to ISO string). PUT /:id updates customer (updated_at refreshed). DELETE /:id. JSON array fields: preferred_locations, preferred_bhk, amenities_wishlist — always parse on read, stringify on write.",
+
+    "Create /Users/oncrealtypartners/ONC_GHARSETU_APP/server/routes/properties.js — Express Router. GET / supports query params locality, type, status, min_price, max_price. Also compute avg_price_sqft for same locality+type and include in each property object for AI price suggestion. GET /:id. POST /. PUT /:id. DELETE /:id. JSON field: amenities — parse on read, stringify on write.",
+
+    "Create /Users/oncrealtypartners/ONC_GHARSETU_APP/server/routes/matchmaking.js — Express Router. POST /find accepts { buyer_id }. Fetches buyer from customers table. Fetches all properties with status='available'. For each property scores: budget 30pts (full if property.price between budget_min and budget_max; 15pts if within 20% above max; 0 otherwise), location 25pts (full if property.locality is in buyer's preferred_locations array), property_type 20pts (full match), BHK 15pts (full if property.bhk is in buyer's preferred_bhk array), amenities 10pts (proportional: matched_count/wishlist_count * 10). Computes percentage = total/100. Filters out percentage < 0.20. Sorts descending. For each result generates an AI insight string like 'This [BHK]BHK in [locality] matches [pct]% of your preferences. [Budget/location/type note].' Returns array of { property, score, percentage, breakdown, insight }.",
+
+    "Create /Users/oncrealtypartners/ONC_GHARSETU_APP/server/routes/deals.js — Express Router. GET / supports query params status, month (YYYY-MM). Auto-calculates amounts on read: buyer_brokerage_amount = deal_amount * buyer_brokerage_pct/100, seller_brokerage_amount = deal_amount * seller_brokerage_pct/100, total_brokerage_amount = sum of both. GET /stats returns { total_brokerage_month, total_brokerage_alltime, deal_count, top_localities: [{locality, count}] } by joining with properties table. GET /:id. POST / — validate required fields, auto-calc amounts before insert, JSON.stringify brokers array. PUT /:id — same auto-calc. DELETE /:id. JSON field: brokers — parse on read, stringify on write.",
+
+    "Create /Users/oncrealtypartners/ONC_GHARSETU_APP/server/routes/settings.js — Express Router. GET / fetches all rows from settings table, returns as { key: value } object. PUT / accepts { key: value } body, upserts each key using INSERT OR REPLACE INTO settings(key, value) VALUES(?,?).",
+
+    "Create /Users/oncrealtypartners/ONC_GHARSETU_APP/server/index.js — require express, cors, routes. app.use(cors()), app.use(express.json()). Mount: /api/customers, /api/properties, /api/matchmaking, /api/deals, /api/settings. app.listen(3001). Log 'Server running on port 3001'.",
+
+    "Run: cd /Users/oncrealtypartners/ONC_GHARSETU_APP/server && npm install"
+  ],
+  "acceptance_criteria": [
+    "cd /Users/oncrealtypartners/ONC_GHARSETU_APP/server && node index.js logs 'Server running on port 3001' with no errors",
+    "curl http://localhost:3001/api/customers returns a JSON array with at least 5 seeded customers",
+    "curl http://localhost:3001/api/properties returns a JSON array with at least 5 seeded properties",
+    "curl http://localhost:3001/api/settings returns a JSON object with at least company_name key",
+    "curl -X POST http://localhost:3001/api/matchmaking/find -H 'Content-Type: application/json' -d '{\"buyer_id\":1}' returns an array (may be empty if no matches, but must not 500)"
+  ],
+  "verification": [
+    "cd /Users/oncrealtypartners/ONC_GHARSETU_APP/server && npm install && node index.js &",
+    "sleep 2 && curl -s http://localhost:3001/api/customers | node -e \"const d=require('fs').readFileSync('/dev/stdin','utf8'); const a=JSON.parse(d); process.exit(Array.isArray(a) && a.length>=5 ? 0 : 1)\"",
+    "curl -s http://localhost:3001/api/settings | node -e \"const d=require('fs').readFileSync('/dev/stdin','utf8'); const o=JSON.parse(d); process.exit(o.company_name !== undefined ? 0 : 1)\"",
+    "kill %1 2>/dev/null; true"
+  ],
+  "blocked_reason": null,
+  "findings": "Server runs cleanly on port 3001. All 5 tables created (customers, properties, deals, settings). Seeds: 5 customers, 5 properties, 2 deals, 6 settings keys. All verification curl tests pass. JSON array columns (preferred_locations, preferred_bhk, amenities_wishlist, amenities, brokers) are stored as TEXT and parsed in routes. Matchmaking returns 5 matches for buyer_id=1 with scores and AI insight strings. Root package.json with concurrently installed. FEAT-002 (client scaffold) and FEAT-003 can proceed — they depend on /api/* endpoints all being live on port 3001."
+}
