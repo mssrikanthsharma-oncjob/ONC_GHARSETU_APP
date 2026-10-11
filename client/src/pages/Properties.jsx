@@ -255,9 +255,9 @@ export default function Properties() {
       {loading && <LoadingSpinner fullPage />}
 
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-2">
         <h1 className="text-2xl font-bold text-[#1e3a5f]">Properties</h1>
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2 items-center flex-wrap">
           {/* Grid / List toggle */}
           <button
             onClick={() => setViewMode('grid')}
@@ -293,18 +293,18 @@ export default function Properties() {
 
       {/* Filter bar */}
       <div className="bg-white rounded-xl p-4 shadow-sm mb-6 border border-gray-100">
-        <div className="flex flex-wrap gap-3 items-center">
+        <div className="flex flex-col sm:flex-row flex-wrap gap-3">
           <input
             type="text"
             placeholder="Locality…"
             value={filters.locality}
             onChange={e => setFilters(f => ({ ...f, locality: e.target.value }))}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm w-36 focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] transition-all"
+            className="border border-gray-300 rounded-lg px-3 py-2 text-sm w-full sm:w-36 focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] transition-all"
           />
           <select
             value={filters.type}
             onChange={e => setFilters(f => ({ ...f, type: e.target.value }))}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] transition-all"
+            className="border border-gray-300 rounded-lg px-3 py-2 text-sm w-full sm:w-auto focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] transition-all"
           >
             <option value="">All Types</option>
             <option value="flat">Flat</option>
@@ -315,7 +315,7 @@ export default function Properties() {
           <select
             value={filters.status}
             onChange={e => setFilters(f => ({ ...f, status: e.target.value }))}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] transition-all"
+            className="border border-gray-300 rounded-lg px-3 py-2 text-sm w-full sm:w-auto focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] transition-all"
           >
             <option value="">All Status</option>
             <option value="available">Available</option>
@@ -327,14 +327,14 @@ export default function Properties() {
             placeholder="Min price"
             value={filters.min_price}
             onChange={e => setFilters(f => ({ ...f, min_price: e.target.value }))}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm w-28 focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] transition-all"
+            className="border border-gray-300 rounded-lg px-3 py-2 text-sm w-full sm:w-28 focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] transition-all"
           />
           <input
             type="number"
             placeholder="Max price"
             value={filters.max_price}
             onChange={e => setFilters(f => ({ ...f, max_price: e.target.value }))}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm w-28 focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] transition-all"
+            className="border border-gray-300 rounded-lg px-3 py-2 text-sm w-full sm:w-28 focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] transition-all"
           />
         </div>
       </div>
@@ -421,11 +421,11 @@ export default function Properties() {
               <thead>
                 <tr className="bg-[#1e3a5f] text-white text-left">
                   <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider">Title</th>
-                  <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider">Location</th>
+                  <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider hidden sm:table-cell">Location</th>
                   <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider">Price (₹)</th>
                   <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider">BHK</th>
-                  <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider">Area (sqft)</th>
-                  <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider">Furnishing</th>
+                  <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider hidden sm:table-cell">Area (sqft)</th>
+                  <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider hidden lg:table-cell">Furnishing</th>
                   <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider">Status</th>
                   <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider">Actions</th>
                 </tr>
@@ -441,13 +441,13 @@ export default function Properties() {
                   properties.map((p, idx) => (
                     <tr key={p.id} className={`hover:bg-blue-50 transition-colors ${idx % 2 === 1 ? 'bg-gray-50/50' : ''}`}>
                       <td className="px-6 py-4 font-medium text-gray-800">{p.title}</td>
-                      <td className="px-6 py-4 text-sm text-gray-600">
+                      <td className="px-6 py-4 text-sm text-gray-600 hidden sm:table-cell">
                         {[p.locality, p.city].filter(Boolean).join(', ')}
                       </td>
                       <td className="px-6 py-4 text-sm font-bold text-[#f0a500]">{formatPrice(p.price)}</td>
                       <td className="px-6 py-4 text-sm text-gray-600">{p.bhk || '—'}</td>
-                      <td className="px-6 py-4 text-sm text-gray-600">{p.area_sqft || '—'}</td>
-                      <td className="px-6 py-4 text-sm text-gray-600">{p.furnishing || '—'}</td>
+                      <td className="px-6 py-4 text-sm text-gray-600 hidden sm:table-cell">{p.area_sqft || '—'}</td>
+                      <td className="px-6 py-4 text-sm text-gray-600 hidden lg:table-cell">{p.furnishing || '—'}</td>
                       <td className="px-6 py-4">{statusBadge(p.status)}</td>
                       <td className="px-6 py-4">
                         <div className="flex gap-2">

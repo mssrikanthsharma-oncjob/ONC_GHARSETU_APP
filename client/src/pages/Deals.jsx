@@ -236,18 +236,18 @@ export default function Deals() {
       {loading && <LoadingSpinner fullPage />}
 
       {/* Header */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-2">
         <h1 className="text-2xl font-bold text-[#1e3a5f]">Deals</h1>
         <button
           onClick={openAdd}
-          className="bg-[#1e3a5f] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#16305a] transition-colors shadow-sm"
+          className="bg-[#1e3a5f] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#16305a] transition-colors shadow-sm min-h-[44px]"
         >
           + Add Deal
         </button>
       </div>
 
       {/* Stats row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6">
         <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
           <div className="flex items-center gap-3 mb-2">
             <div className="bg-[#1e3a5f]/10 rounded-full p-2">
@@ -296,11 +296,11 @@ export default function Deals() {
 
       {/* Filter bar */}
       <div className="bg-white rounded-xl p-4 shadow-sm mb-6 border border-gray-100">
-        <div className="flex flex-wrap gap-3 items-center">
+        <div className="flex flex-col sm:flex-row flex-wrap gap-3">
           <select
             value={filters.status}
             onChange={e => setFilters(f => ({ ...f, status: e.target.value }))}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] transition-all"
+            className="border border-gray-300 rounded-lg px-3 py-2 text-sm w-full sm:w-auto focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] transition-all"
           >
             <option value="">All Status</option>
             <option value="negotiation">Negotiation</option>
@@ -311,13 +311,75 @@ export default function Deals() {
             type="month"
             value={filters.month}
             onChange={e => setFilters(f => ({ ...f, month: e.target.value }))}
-            className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] transition-all"
+            className="border border-gray-300 rounded-lg px-3 py-2 text-sm w-full sm:w-auto focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] transition-all"
           />
         </div>
       </div>
 
-      {/* Table */}
-      <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+      {/* Mobile card list */}
+      <div className="sm:hidden space-y-3 mb-6">
+        {deals.length === 0 && !loading ? (
+          <div className="bg-white rounded-xl p-8 text-center text-gray-400 border border-gray-100">
+            No deals found.
+          </div>
+        ) : (
+          deals.map(deal => (
+            <div key={deal.id} className="bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+              {/* Property title */}
+              <div className="font-semibold text-gray-800 mb-1 truncate">
+                {propertyTitle(deal.property_id)}
+              </div>
+              {/* Buyer / Seller */}
+              <div className="text-sm text-gray-500 mb-2">
+                <span>Buyer: {customerName(deal.buyer_customer_id)}</span>
+                {deal.seller_customer_id && (
+                  <span> · Seller: {customerName(deal.seller_customer_id)}</span>
+                )}
+              </div>
+              {/* Deal amount */}
+              <div className="text-xl font-bold text-[#f0a500] mb-2">
+                {formatPrice(deal.total_brokerage)}
+                <span className="text-sm font-normal text-gray-500 ml-1">brokerage</span>
+              </div>
+              {/* Badges row */}
+              <div className="flex flex-wrap gap-2 mb-2">
+                {brokerageTypeBadge(deal.brokerage_type)}
+                {statusBadge(deal.status)}
+              </div>
+              {/* Date */}
+              <div className="text-xs text-gray-400 mb-3">
+                {deal.deal_date ? new Date(deal.deal_date).toLocaleDateString('en-IN') : '—'}
+              </div>
+              {/* Action buttons */}
+              <div className="flex gap-2">
+                <button
+                  onClick={() => openEdit(deal)}
+                  className="flex items-center gap-1 px-3 py-2 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors text-sm min-h-[44px]"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                  </svg>
+                  Edit
+                </button>
+                <button
+                  onClick={() => handleDelete(deal)}
+                  className="flex items-center gap-1 px-3 py-2 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 transition-colors text-sm min-h-[44px]"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                  </svg>
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Desktop table */}
+      <div className="hidden sm:block bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>

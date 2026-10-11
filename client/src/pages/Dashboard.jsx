@@ -140,15 +140,15 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50">
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-6 gap-1">
         <h1 className="text-2xl font-bold text-[#1e3a5f]">Dashboard</h1>
-        <span className="text-gray-400 text-sm">{dateStr}</span>
+        <span className="text-gray-400 text-sm hidden sm:block">{dateStr}</span>
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 mb-6">
         <KpiCard
           bg="bg-blue-100"
           icon={
@@ -219,11 +219,15 @@ export default function Dashboard() {
       </div>
 
       {/* Row 2: Bar chart + Breakdown */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-6 mb-6">
         {/* Monthly Brokerage Chart */}
-        <div className="lg:col-span-2 bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <div className="lg:col-span-2 bg-white rounded-xl p-4 sm:p-6 shadow-sm border border-gray-100">
           <h2 className="text-lg font-semibold text-[#1e3a5f] mb-4">Monthly Brokerage – Last 6 Months</h2>
-          <BarChart data={monthly_brokerage} />
+          <div className="overflow-x-auto">
+            <div style={{ minWidth: '400px' }}>
+              <BarChart data={monthly_brokerage} />
+            </div>
+          </div>
         </div>
 
         {/* Property & Customer Breakdown */}
@@ -267,7 +271,7 @@ export default function Dashboard() {
       </div>
 
       {/* Row 3: Recent Deals + Follow-Up */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-6 mb-6">
         {/* Recent Deals */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="flex justify-between items-center px-6 py-4 border-b border-gray-100">

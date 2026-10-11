@@ -58,7 +58,7 @@ export default function Settings() {
     <div>
       <h1 className="text-2xl font-bold text-[#1e3a5f] mb-4">Settings</h1>
 
-      <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-md p-8 mt-8">
+      <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-md p-4 sm:p-8 mt-8">
         <form onSubmit={handleSave} className="space-y-6">
           {/* Company Information */}
           <div>

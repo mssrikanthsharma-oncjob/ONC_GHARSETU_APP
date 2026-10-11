@@ -188,9 +188,9 @@ export default function Matchmaking() {
 
       <h1 className="text-2xl font-bold text-[#1e3a5f] mb-6">Matchmaking</h1>
 
-      <div className="flex gap-6">
+      <div className="flex flex-col lg:flex-row gap-6">
         {/* Left panel */}
-        <div className="w-1/3">
+        <div className="w-full lg:w-1/3">
           <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
             <h2 className="text-lg font-semibold text-[#1e3a5f] mb-4">Find Matches</h2>
 
@@ -221,7 +221,7 @@ export default function Matchmaking() {
         </div>
 
         {/* Right panel */}
-        <div className="w-2/3">
+        <div className="w-full lg:w-2/3">
           {results === null ? (
             <div className="flex items-center justify-center h-48 text-gray-400 bg-white rounded-xl shadow-sm border border-gray-100">
               Select a buyer and click Find Matches
@@ -264,7 +264,7 @@ export default function Matchmaking() {
                       <button
                         type="button"
                         onClick={() => toggleCard(idx)}
-                        className="text-xs text-[#1e3a5f] font-medium hover:underline focus:outline-none"
+                        className="text-xs text-[#1e3a5f] font-medium hover:underline focus:outline-none min-h-[44px] flex items-center"
                       >
                         {expandedCards[idx] ? '▲ Hide' : '▼ Score Breakdown'}
                       </button>
@@ -297,7 +297,7 @@ export default function Matchmaking() {
                     <div className="mt-3 flex justify-end">
                       <button
                         onClick={() => openDealModal(r)}
-                        className="bg-[#f0a500] text-white text-xs px-3 py-1.5 rounded-lg hover:bg-[#d4920a] transition-colors"
+                        className="w-full sm:w-auto bg-[#f0a500] text-white text-xs px-3 py-2 rounded-lg hover:bg-[#d4920a] transition-colors min-h-[44px]"
                       >
                         Create Deal
                       </button>

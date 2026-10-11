@@ -25,7 +25,7 @@ export default function Login() {
       style={{ background: 'linear-gradient(135deg, #1e3a5f 0%, #2d5a8e 100%)' }}
     >
       <div className="w-full max-w-md">
-        <div className="bg-white rounded-2xl shadow-2xl p-8">
+        <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-8">
           {/* Logo */}
           <div className="flex flex-col items-center mb-6">
             <Logo variant="login" />
