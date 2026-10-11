@@ -29,6 +29,8 @@ export default function Login() {
           {/* Logo */}
           <div className="flex flex-col items-center mb-6">
             <Logo variant="login" />
+            <h1 className="text-2xl font-bold text-[#1e3a5f] mt-3 tracking-wide">ONC Ghar Setu</h1>
+            <p className="text-gray-500 text-sm mt-1">Your Smart Realty Partner</p>
           </div>
 
           <hr className="border-gray-200 mb-6" />

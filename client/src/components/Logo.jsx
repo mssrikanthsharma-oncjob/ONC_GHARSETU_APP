@@ -14,23 +14,17 @@ export default function Logo({ variant = 'navbar' }) {
 
   if (variant === 'login') {
     return (
-      <svg width="120" height="100" viewBox="0 0 120 100" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="ONC Gharsetu Logo">
+      <svg width="90" height="76" viewBox="0 0 120 76" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="ONC Gharsetu Logo">
         {/* House roof */}
-        <polygon points="60,8 96,38 24,38" fill="#1e3a5f" />
-        {/* Roof highlight */}
-        <polygon points="60,8 96,38 24,38" fill="#1e3a5f" />
+        <polygon points="60,4 100,38 20,38" fill="#1e3a5f" />
         {/* House body */}
-        <rect x="28" y="38" width="64" height="38" fill="#1e3a5f" />
+        <rect x="24" y="38" width="72" height="38" fill="#1e3a5f" />
         {/* Door */}
-        <rect x="48" y="55" width="24" height="21" rx="2" fill="white" />
+        <rect x="48" y="53" width="24" height="23" rx="2" fill="white" />
         {/* Window left */}
-        <rect x="32" y="46" width="12" height="10" rx="1" fill="#f0a500" fillOpacity="0.7" />
+        <rect x="30" y="46" width="13" height="10" rx="1" fill="#f0a500" fillOpacity="0.8" />
         {/* Window right */}
-        <rect x="76" y="46" width="12" height="10" rx="1" fill="#f0a500" fillOpacity="0.7" />
-        {/* Text ONC */}
-        <text x="60" y="90" textAnchor="middle" fontFamily="system-ui, sans-serif" fontWeight="700" fontSize="14" fill="#1e3a5f" letterSpacing="2">ONC</text>
-        {/* Text GHARSETU */}
-        <text x="60" y="103" textAnchor="middle" fontFamily="system-ui, sans-serif" fontWeight="400" fontSize="9" fill="#1e3a5f" letterSpacing="1">GHARSETU</text>
+        <rect x="77" y="46" width="13" height="10" rx="1" fill="#f0a500" fillOpacity="0.8" />
       </svg>
     )
   }
