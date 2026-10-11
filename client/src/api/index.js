@@ -1,6 +1,12 @@
 import axios from 'axios'
 
-const api = axios.create({ baseURL: '/api' })
+// In production (Vercel), VITE_API_URL points to the Railway server.
+// In development, the Vite proxy handles /api → localhost:3001.
+const baseURL = import.meta.env.VITE_API_URL
+  ? `${import.meta.env.VITE_API_URL}/api`
+  : '/api'
+
+const api = axios.create({ baseURL })
 
 export const getCustomers = (params = {}) => api.get('/customers', { params }).then(r => r.data)
 export const getCustomer = (id) => api.get(`/customers/${id}`).then(r => r.data)
