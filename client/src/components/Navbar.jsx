@@ -2,7 +2,8 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import Logo from './Logo'
 
 const links = [
-  { to: '/', label: 'Customers' },
+  { to: '/', label: 'Dashboard' },
+  { to: '/customers', label: 'Customers' },
   { to: '/properties', label: 'Properties' },
   { to: '/matchmaking', label: 'Matchmaking' },
   { to: '/deals', label: 'Deals' },

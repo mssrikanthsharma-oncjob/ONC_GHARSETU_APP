@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { ToastProvider } from './components/Toast'
 import Navbar from './components/Navbar'
+import Dashboard from './pages/Dashboard'
 import Customers from './pages/Customers'
 import Properties from './pages/Properties'
 import Matchmaking from './pages/Matchmaking'
@@ -35,6 +36,14 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           <Route
             path="/"
+            element={
+              <ProtectedRoute>
+                <AppLayout><Dashboard /></AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/customers"
             element={
               <ProtectedRoute>
                 <AppLayout><Customers /></AppLayout>
