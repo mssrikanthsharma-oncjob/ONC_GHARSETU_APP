@@ -10,18 +10,6 @@ function formatPrice(val) {
   return '₹' + Number(val).toLocaleString('en-IN')
 }
 
-function scoreBadge(percentage) {
-  let cls = 'bg-red-500'
-  if (percentage >= 80) cls = 'bg-green-500'
-  else if (percentage >= 50) cls = 'bg-yellow-500'
-  else if (percentage >= 20) cls = 'bg-orange-500'
-  return (
-    <span className={`${cls} text-white text-xs font-bold px-2 py-1 rounded-full`}>
-      {percentage}%
-    </span>
-  )
-}
-
 function todayStr() {
   return new Date().toISOString().slice(0, 10)
 }
@@ -195,15 +183,15 @@ export default function Matchmaking() {
   const showSellerPct = ['seller_only', 'both', 'split'].includes(dealForm.brokerage_type)
 
   return (
-    <div>
+    <div className="min-h-screen bg-gray-50">
       {loading && <LoadingSpinner fullPage />}
 
-      <h1 className="text-2xl font-bold text-[#1e3a5f] mb-4">Matchmaking</h1>
+      <h1 className="text-2xl font-bold text-[#1e3a5f] mb-6">Matchmaking</h1>
 
       <div className="flex gap-6">
         {/* Left panel */}
         <div className="w-1/3">
-          <div className="bg-white rounded-xl shadow p-5">
+          <div className="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
             <h2 className="text-lg font-semibold text-[#1e3a5f] mb-4">Find Matches</h2>
 
             <div className="mb-4">
@@ -211,7 +199,7 @@ export default function Matchmaking() {
               <select
                 value={selectedBuyerId}
                 onChange={e => setSelectedBuyerId(e.target.value)}
-                className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f]"
+                className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] transition-all"
               >
                 <option value="">— Select buyer —</option>
                 {buyers.map(b => (
@@ -225,7 +213,7 @@ export default function Matchmaking() {
             <button
               onClick={handleFindMatches}
               disabled={loading}
-              className="w-full bg-[#1e3a5f] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#162d4a] transition-colors disabled:opacity-50"
+              className="w-full bg-[#1e3a5f] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#16305a] transition-colors disabled:opacity-50 shadow-sm"
             >
               {loading ? 'Searching…' : 'Find Matches'}
             </button>
@@ -235,11 +223,11 @@ export default function Matchmaking() {
         {/* Right panel */}
         <div className="w-2/3">
           {results === null ? (
-            <div className="flex items-center justify-center h-48 text-gray-400 bg-white rounded-xl shadow">
+            <div className="flex items-center justify-center h-48 text-gray-400 bg-white rounded-xl shadow-sm border border-gray-100">
               Select a buyer and click Find Matches
             </div>
           ) : results.length === 0 ? (
-            <div className="flex items-center justify-center h-48 text-gray-400 bg-white rounded-xl shadow">
+            <div className="flex items-center justify-center h-48 text-gray-400 bg-white rounded-xl shadow-sm border border-gray-100">
               No matches found for this buyer
             </div>
           ) : (
@@ -247,26 +235,28 @@ export default function Matchmaking() {
               {results.map((r, idx) => {
                 const p = r.property
                 return (
-                  <div key={p.id} className="bg-white shadow rounded-xl p-5">
+                  <div key={p.id} className="bg-white shadow-md hover:shadow-lg transition-shadow duration-200 rounded-xl overflow-hidden p-4">
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1">
                         <h3 className="font-semibold text-[#1e3a5f] text-base">{p.title}</h3>
                         <p className="text-xs text-gray-500 mt-0.5">
                           {[p.locality, p.city].filter(Boolean).join(', ')}
                         </p>
-                        <p className="text-lg font-bold text-gray-800 mt-1">{formatPrice(p.price)}</p>
+                        <p className="text-lg font-bold text-[#f0a500] mt-1">{formatPrice(p.price)}</p>
                         <div className="flex gap-2 mt-1 text-xs text-gray-600">
                           {p.bhk && <span>{p.bhk} BHK</span>}
                           {p.area_sqft && <span>· {p.area_sqft} sqft</span>}
                         </div>
                       </div>
                       <div className="flex flex-col items-end gap-2">
-                        {scoreBadge(r.percentage)}
+                        <span className={`text-white text-sm font-bold px-3 py-1.5 rounded-full ${r.percentage >= 80 ? 'bg-green-500' : r.percentage >= 50 ? 'bg-yellow-500' : r.percentage >= 20 ? 'bg-orange-500' : 'bg-red-500'}`}>
+                          {r.percentage}%
+                        </span>
                       </div>
                     </div>
 
                     {r.insight && (
-                      <p className="text-xs text-gray-500 italic mt-2">{r.insight}</p>
+                      <p className="text-xs text-gray-600 italic mt-3 border-l-4 border-[#f0a500] pl-3">{r.insight}</p>
                     )}
 
                     {/* Score Breakdown accordion */}

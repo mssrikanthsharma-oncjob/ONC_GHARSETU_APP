@@ -58,83 +58,91 @@ export default function Settings() {
     <div>
       <h1 className="text-2xl font-bold text-[#1e3a5f] mb-4">Settings</h1>
 
-      <div className="max-w-lg mx-auto bg-white rounded-xl shadow p-6 mt-6">
-        <form onSubmit={handleSave} className="space-y-4">
-          {/* Company Name */}
+      <div className="max-w-2xl mx-auto bg-white rounded-2xl shadow-md p-8 mt-8">
+        <form onSubmit={handleSave} className="space-y-6">
+          {/* Company Information */}
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">Company Name</label>
-            <input
-              type="text"
-              value={formData.company_name}
-              onChange={e => setField('company_name', e.target.value)}
-              className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f]"
-            />
-          </div>
-
-          {/* Company Address */}
-          <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">Company Address</label>
-            <textarea
-              rows={3}
-              value={formData.company_address}
-              onChange={e => setField('company_address', e.target.value)}
-              className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] resize-none"
-            />
-          </div>
-
-          {/* Company Phone */}
-          <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">Company Phone</label>
-            <input
-              type="text"
-              value={formData.company_phone}
-              onChange={e => setField('company_phone', e.target.value)}
-              className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f]"
-            />
-          </div>
-
-          {/* Default Brokerage Percentages */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">
-                Default Buyer Brokerage (%)
-              </label>
-              <input
-                type="number"
-                step="0.1"
-                min="0"
-                max="10"
-                value={formData.default_buyer_brokerage_pct}
-                onChange={e => setField('default_buyer_brokerage_pct', e.target.value)}
-                className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f]"
-              />
-            </div>
-            <div>
-              <label className="block text-xs font-medium text-gray-600 mb-1">
-                Default Seller Brokerage (%)
-              </label>
-              <input
-                type="number"
-                step="0.1"
-                min="0"
-                max="10"
-                value={formData.default_seller_brokerage_pct}
-                onChange={e => setField('default_seller_brokerage_pct', e.target.value)}
-                className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f]"
-              />
+            <h2 className="text-lg font-semibold text-[#1e3a5f] mb-4 border-b border-gray-100 pb-2">
+              Company Information
+            </h2>
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Company Name</label>
+                <input
+                  type="text"
+                  value={formData.company_name}
+                  onChange={e => setField('company_name', e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] transition-all"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Company Address</label>
+                <textarea
+                  rows={3}
+                  value={formData.company_address}
+                  onChange={e => setField('company_address', e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] transition-all resize-none"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Company Phone</label>
+                <input
+                  type="text"
+                  value={formData.company_phone}
+                  onChange={e => setField('company_phone', e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] transition-all"
+                />
+              </div>
             </div>
           </div>
 
-          {/* Currency Symbol */}
+          {/* Brokerage Defaults */}
           <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">Currency Symbol</label>
-            <input
-              type="text"
-              maxLength={3}
-              value={formData.currency_symbol}
-              onChange={e => setField('currency_symbol', e.target.value)}
-              className="w-full border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f]"
-            />
+            <h2 className="text-lg font-semibold text-[#1e3a5f] mb-4 border-b border-gray-100 pb-2">
+              Brokerage Defaults
+            </h2>
+            <div className="space-y-4">
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Default Buyer Brokerage (%)
+                  </label>
+                  <input
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    max="10"
+                    value={formData.default_buyer_brokerage_pct}
+                    onChange={e => setField('default_buyer_brokerage_pct', e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] transition-all"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Default Seller Brokerage (%)
+                  </label>
+                  <input
+                    type="number"
+                    step="0.1"
+                    min="0"
+                    max="10"
+                    value={formData.default_seller_brokerage_pct}
+                    onChange={e => setField('default_seller_brokerage_pct', e.target.value)}
+                    className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] transition-all"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Currency Symbol</label>
+                <input
+                  type="text"
+                  maxLength={3}
+                  value={formData.currency_symbol}
+                  onChange={e => setField('currency_symbol', e.target.value)}
+                  className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] transition-all"
+                />
+              </div>
+            </div>
           </div>
 
           {/* Info box */}
@@ -147,7 +155,7 @@ export default function Settings() {
             <button
               type="submit"
               disabled={saving}
-              className="w-full bg-[#1e3a5f] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#162d4a] transition-colors disabled:opacity-50"
+              className="bg-[#1e3a5f] text-white px-6 py-2.5 rounded-lg font-semibold hover:bg-[#16305a] transition-colors disabled:opacity-50"
             >
               {saving ? 'Saving…' : 'Save Settings'}
             </button>

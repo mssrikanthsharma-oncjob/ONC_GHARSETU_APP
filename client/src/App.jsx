@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom'
 import { ToastProvider } from './components/Toast'
 import Navbar from './components/Navbar'
 import Customers from './pages/Customers'
@@ -6,23 +6,74 @@ import Properties from './pages/Properties'
 import Matchmaking from './pages/Matchmaking'
 import Deals from './pages/Deals'
 import Settings from './pages/Settings'
+import Login from './pages/Login'
+
+function ProtectedRoute({ children }) {
+  const isAuthenticated = localStorage.getItem('gharsetu_auth') === 'true'
+  if (!isAuthenticated) {
+    return <Navigate to="/login" replace />
+  }
+  return children
+}
+
+function AppLayout({ children }) {
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <Navbar />
+      <main className="p-6">
+        {children}
+      </main>
+    </div>
+  )
+}
 
 export default function App() {
   return (
     <ToastProvider>
       <BrowserRouter>
-        <div className="min-h-screen bg-gray-50">
-          <Navbar />
-          <main className="p-6">
-            <Routes>
-              <Route path="/" element={<Customers />} />
-              <Route path="/properties" element={<Properties />} />
-              <Route path="/matchmaking" element={<Matchmaking />} />
-              <Route path="/deals" element={<Deals />} />
-              <Route path="/settings" element={<Settings />} />
-            </Routes>
-          </main>
-        </div>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <AppLayout><Customers /></AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/properties"
+            element={
+              <ProtectedRoute>
+                <AppLayout><Properties /></AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/matchmaking"
+            element={
+              <ProtectedRoute>
+                <AppLayout><Matchmaking /></AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/deals"
+            element={
+              <ProtectedRoute>
+                <AppLayout><Deals /></AppLayout>
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/settings"
+            element={
+              <ProtectedRoute>
+                <AppLayout><Settings /></AppLayout>
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
       </BrowserRouter>
     </ToastProvider>
   )

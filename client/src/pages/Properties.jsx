@@ -251,11 +251,11 @@ export default function Properties() {
   }
 
   return (
-    <div>
+    <div className="min-h-screen bg-gray-50">
       {loading && <LoadingSpinner fullPage />}
 
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-[#1e3a5f]">Properties</h1>
         <div className="flex gap-2 items-center">
           {/* Grid / List toggle */}
@@ -284,7 +284,7 @@ export default function Properties() {
           </button>
           <button
             onClick={openAdd}
-            className="bg-[#1e3a5f] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#162d4a] transition-colors"
+            className="bg-[#1e3a5f] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#16305a] transition-colors shadow-sm"
           >
             + Add Property
           </button>
@@ -292,49 +292,51 @@ export default function Properties() {
       </div>
 
       {/* Filter bar */}
-      <div className="flex flex-wrap gap-3 mb-4">
-        <input
-          type="text"
-          placeholder="Locality…"
-          value={filters.locality}
-          onChange={e => setFilters(f => ({ ...f, locality: e.target.value }))}
-          className="border rounded-lg px-3 py-2 text-sm w-36 focus:outline-none focus:ring-2 focus:ring-[#1e3a5f]"
-        />
-        <select
-          value={filters.type}
-          onChange={e => setFilters(f => ({ ...f, type: e.target.value }))}
-          className="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f]"
-        >
-          <option value="">All Types</option>
-          <option value="flat">Flat</option>
-          <option value="house">House</option>
-          <option value="plot">Plot</option>
-          <option value="commercial">Commercial</option>
-        </select>
-        <select
-          value={filters.status}
-          onChange={e => setFilters(f => ({ ...f, status: e.target.value }))}
-          className="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f]"
-        >
-          <option value="">All Status</option>
-          <option value="available">Available</option>
-          <option value="pending">Pending</option>
-          <option value="sold">Sold</option>
-        </select>
-        <input
-          type="number"
-          placeholder="Min price"
-          value={filters.min_price}
-          onChange={e => setFilters(f => ({ ...f, min_price: e.target.value }))}
-          className="border rounded-lg px-3 py-2 text-sm w-28 focus:outline-none focus:ring-2 focus:ring-[#1e3a5f]"
-        />
-        <input
-          type="number"
-          placeholder="Max price"
-          value={filters.max_price}
-          onChange={e => setFilters(f => ({ ...f, max_price: e.target.value }))}
-          className="border rounded-lg px-3 py-2 text-sm w-28 focus:outline-none focus:ring-2 focus:ring-[#1e3a5f]"
-        />
+      <div className="bg-white rounded-xl p-4 shadow-sm mb-6 border border-gray-100">
+        <div className="flex flex-wrap gap-3 items-center">
+          <input
+            type="text"
+            placeholder="Locality…"
+            value={filters.locality}
+            onChange={e => setFilters(f => ({ ...f, locality: e.target.value }))}
+            className="border border-gray-300 rounded-lg px-3 py-2 text-sm w-36 focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] transition-all"
+          />
+          <select
+            value={filters.type}
+            onChange={e => setFilters(f => ({ ...f, type: e.target.value }))}
+            className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] transition-all"
+          >
+            <option value="">All Types</option>
+            <option value="flat">Flat</option>
+            <option value="house">House</option>
+            <option value="plot">Plot</option>
+            <option value="commercial">Commercial</option>
+          </select>
+          <select
+            value={filters.status}
+            onChange={e => setFilters(f => ({ ...f, status: e.target.value }))}
+            className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] transition-all"
+          >
+            <option value="">All Status</option>
+            <option value="available">Available</option>
+            <option value="pending">Pending</option>
+            <option value="sold">Sold</option>
+          </select>
+          <input
+            type="number"
+            placeholder="Min price"
+            value={filters.min_price}
+            onChange={e => setFilters(f => ({ ...f, min_price: e.target.value }))}
+            className="border border-gray-300 rounded-lg px-3 py-2 text-sm w-28 focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] transition-all"
+          />
+          <input
+            type="number"
+            placeholder="Max price"
+            value={filters.max_price}
+            onChange={e => setFilters(f => ({ ...f, max_price: e.target.value }))}
+            className="border border-gray-300 rounded-lg px-3 py-2 text-sm w-28 focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] transition-all"
+          />
+        </div>
       </div>
 
       {/* Grid View */}
@@ -346,43 +348,64 @@ export default function Properties() {
             </div>
           ) : (
             properties.map(p => (
-              <div key={p.id} className="bg-white rounded-xl shadow p-4 flex flex-col gap-2">
-                <div className="flex items-start justify-between">
+              <div key={p.id} className="bg-white rounded-xl shadow-md hover:shadow-lg transition-shadow duration-200 overflow-hidden flex flex-col">
+                {/* Card header gradient */}
+                <div className="bg-gradient-to-br from-[#1e3a5f] to-[#2d5a8e] h-32 relative flex items-end p-4">
+                  <div className="flex gap-2 flex-wrap">
+                    <span className="bg-white/20 text-white text-xs px-2.5 py-0.5 rounded-full font-medium capitalize">
+                      {p.type}
+                    </span>
+                    {p.bhk && (
+                      <span className="bg-[#f0a500]/90 text-white text-xs px-2.5 py-0.5 rounded-full font-medium">
+                        {p.bhk} BHK
+                      </span>
+                    )}
+                    <div className="absolute top-3 right-3">
+                      {statusBadge(p.status)}
+                    </div>
+                  </div>
+                </div>
+                {/* Card body */}
+                <div className="p-4 flex flex-col gap-2 flex-1">
                   <h3 className="font-semibold text-[#1e3a5f] text-sm leading-tight">{p.title}</h3>
-                  {statusBadge(p.status)}
-                </div>
-                <p className="text-xs text-gray-500">{[p.locality, p.city].filter(Boolean).join(', ')}</p>
-                <p className="text-lg font-bold text-gray-800">{formatPrice(p.price)}</p>
-                <div className="flex flex-wrap gap-2 text-xs">
-                  {p.bhk && (
-                    <span className="bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full">
-                      {p.bhk} BHK
-                    </span>
-                  )}
-                  {p.area_sqft && (
-                    <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
-                      {p.area_sqft} sqft
-                    </span>
-                  )}
-                  {p.furnishing && (
-                    <span className="bg-yellow-50 text-yellow-700 px-2 py-0.5 rounded-full">
-                      {p.furnishing}
-                    </span>
-                  )}
-                </div>
-                <div className="flex gap-2 mt-auto pt-2">
-                  <button
-                    onClick={() => openEdit(p)}
-                    className="text-xs px-2 py-1 rounded bg-blue-50 text-blue-700 hover:bg-blue-100"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(p)}
-                    className="text-xs px-2 py-1 rounded bg-red-50 text-red-700 hover:bg-red-100"
-                  >
-                    Delete
-                  </button>
+                  <p className="text-xs text-gray-500">{[p.locality, p.city].filter(Boolean).join(', ')}</p>
+                  <p className="text-lg font-bold text-[#f0a500]">{formatPrice(p.price)}</p>
+                  <div className="flex flex-wrap gap-2 text-xs">
+                    {p.area_sqft && (
+                      <span className="bg-gray-100 text-gray-600 px-2 py-0.5 rounded-full">
+                        {p.area_sqft} sqft
+                      </span>
+                    )}
+                    {p.furnishing && (
+                      <span className="bg-yellow-50 text-yellow-700 px-2 py-0.5 rounded-full">
+                        {p.furnishing}
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex gap-2 mt-auto pt-2">
+                    <button
+                      onClick={() => openEdit(p)}
+                      className="p-1.5 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors"
+                      aria-label="Edit"
+                      title="Edit"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                      </svg>
+                    </button>
+                    <button
+                      onClick={() => handleDelete(p)}
+                      className="p-1.5 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 transition-colors"
+                      aria-label="Delete"
+                      title="Delete"
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <polyline points="3 6 5 6 21 6"/>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               </div>
             ))
@@ -392,60 +415,72 @@ export default function Properties() {
 
       {/* List View */}
       {viewMode === 'list' && (
-        <div className="bg-white rounded-xl shadow overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b text-left text-gray-500 text-xs uppercase tracking-wide">
-                <th className="px-4 py-3">Title</th>
-                <th className="px-4 py-3">Location</th>
-                <th className="px-4 py-3">Price (₹)</th>
-                <th className="px-4 py-3">BHK</th>
-                <th className="px-4 py-3">Area (sqft)</th>
-                <th className="px-4 py-3">Furnishing</th>
-                <th className="px-4 py-3">Status</th>
-                <th className="px-4 py-3">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {properties.length === 0 && !loading ? (
-                <tr>
-                  <td colSpan={8} className="px-4 py-8 text-center text-gray-400">
-                    No properties found.
-                  </td>
+        <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="bg-[#1e3a5f] text-white text-left">
+                  <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider">Title</th>
+                  <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider">Location</th>
+                  <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider">Price (₹)</th>
+                  <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider">BHK</th>
+                  <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider">Area (sqft)</th>
+                  <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider">Furnishing</th>
+                  <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider">Status</th>
+                  <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider">Actions</th>
                 </tr>
-              ) : (
-                properties.map(p => (
-                  <tr key={p.id} className="border-b last:border-0 hover:bg-gray-50">
-                    <td className="px-4 py-3 font-medium text-gray-800">{p.title}</td>
-                    <td className="px-4 py-3 text-gray-600">
-                      {[p.locality, p.city].filter(Boolean).join(', ')}
-                    </td>
-                    <td className="px-4 py-3 text-gray-800 font-medium">{formatPrice(p.price)}</td>
-                    <td className="px-4 py-3 text-gray-600">{p.bhk || '—'}</td>
-                    <td className="px-4 py-3 text-gray-600">{p.area_sqft || '—'}</td>
-                    <td className="px-4 py-3 text-gray-600">{p.furnishing || '—'}</td>
-                    <td className="px-4 py-3">{statusBadge(p.status)}</td>
-                    <td className="px-4 py-3">
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => openEdit(p)}
-                          className="text-xs px-2 py-1 rounded bg-blue-50 text-blue-700 hover:bg-blue-100"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDelete(p)}
-                          className="text-xs px-2 py-1 rounded bg-red-50 text-red-700 hover:bg-red-100"
-                        >
-                          Delete
-                        </button>
-                      </div>
+              </thead>
+              <tbody>
+                {properties.length === 0 && !loading ? (
+                  <tr>
+                    <td colSpan={8} className="px-6 py-8 text-center text-gray-400">
+                      No properties found.
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                ) : (
+                  properties.map((p, idx) => (
+                    <tr key={p.id} className={`hover:bg-blue-50 transition-colors ${idx % 2 === 1 ? 'bg-gray-50/50' : ''}`}>
+                      <td className="px-6 py-4 font-medium text-gray-800">{p.title}</td>
+                      <td className="px-6 py-4 text-sm text-gray-600">
+                        {[p.locality, p.city].filter(Boolean).join(', ')}
+                      </td>
+                      <td className="px-6 py-4 text-sm font-bold text-[#f0a500]">{formatPrice(p.price)}</td>
+                      <td className="px-6 py-4 text-sm text-gray-600">{p.bhk || '—'}</td>
+                      <td className="px-6 py-4 text-sm text-gray-600">{p.area_sqft || '—'}</td>
+                      <td className="px-6 py-4 text-sm text-gray-600">{p.furnishing || '—'}</td>
+                      <td className="px-6 py-4">{statusBadge(p.status)}</td>
+                      <td className="px-6 py-4">
+                        <div className="flex gap-2">
+                          <button
+                            onClick={() => openEdit(p)}
+                            className="p-1.5 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors"
+                            aria-label="Edit"
+                            title="Edit"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                              <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                            </svg>
+                          </button>
+                          <button
+                            onClick={() => handleDelete(p)}
+                            className="p-1.5 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 transition-colors"
+                            aria-label="Delete"
+                            title="Delete"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <polyline points="3 6 5 6 21 6"/>
+                              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                            </svg>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
 

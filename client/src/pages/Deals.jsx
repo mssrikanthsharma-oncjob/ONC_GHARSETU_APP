@@ -232,127 +232,161 @@ export default function Deals() {
   const topLocality = stats.top_localities?.[0]?.locality || '—'
 
   return (
-    <div>
+    <div className="min-h-screen bg-gray-50">
       {loading && <LoadingSpinner fullPage />}
 
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-[#1e3a5f]">Deals</h1>
         <button
           onClick={openAdd}
-          className="bg-[#1e3a5f] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#162d4a] transition-colors"
+          className="bg-[#1e3a5f] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#16305a] transition-colors shadow-sm"
         >
           + Add Deal
         </button>
       </div>
 
       {/* Stats row */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-        <div className="bg-white shadow-sm rounded-lg p-4">
-          <p className="text-xs text-gray-500 mb-1">This Month</p>
-          <p className="text-2xl font-bold text-[#f0a500]">
-            {formatPrice(stats.total_brokerage_month)}
-          </p>
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="bg-[#1e3a5f]/10 rounded-full p-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1e3a5f" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+              </svg>
+            </div>
+            <p className="text-sm text-gray-500">This Month</p>
+          </div>
+          <p className="text-2xl font-bold text-[#1e3a5f]">{formatPrice(stats.total_brokerage_month)}</p>
         </div>
-        <div className="bg-white shadow-sm rounded-lg p-4">
-          <p className="text-xs text-gray-500 mb-1">All Time</p>
-          <p className="text-2xl font-bold text-[#f0a500]">
-            {formatPrice(stats.total_brokerage_alltime)}
-          </p>
+        <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="bg-[#1e3a5f]/10 rounded-full p-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1e3a5f" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/>
+              </svg>
+            </div>
+            <p className="text-sm text-gray-500">All Time</p>
+          </div>
+          <p className="text-2xl font-bold text-[#1e3a5f]">{formatPrice(stats.total_brokerage_alltime)}</p>
         </div>
-        <div className="bg-white shadow-sm rounded-lg p-4">
-          <p className="text-xs text-gray-500 mb-1">Total Deals</p>
-          <p className="text-2xl font-bold text-[#f0a500]">
-            {stats.deal_count ?? 0}
-          </p>
+        <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="bg-[#1e3a5f]/10 rounded-full p-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1e3a5f" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>
+              </svg>
+            </div>
+            <p className="text-sm text-gray-500">Total Deals</p>
+          </div>
+          <p className="text-2xl font-bold text-[#1e3a5f]">{stats.deal_count ?? 0}</p>
         </div>
-        <div className="bg-white shadow-sm rounded-lg p-4">
-          <p className="text-xs text-gray-500 mb-1">Top Locality</p>
-          <p className="text-2xl font-bold text-[#f0a500]">
-            {topLocality}
-          </p>
+        <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
+          <div className="flex items-center gap-3 mb-2">
+            <div className="bg-[#1e3a5f]/10 rounded-full p-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1e3a5f" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/>
+              </svg>
+            </div>
+            <p className="text-sm text-gray-500">Top Locality</p>
+          </div>
+          <p className="text-2xl font-bold text-[#1e3a5f]">{topLocality}</p>
         </div>
       </div>
 
       {/* Filter bar */}
-      <div className="flex flex-wrap gap-3 mb-4">
-        <select
-          value={filters.status}
-          onChange={e => setFilters(f => ({ ...f, status: e.target.value }))}
-          className="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f]"
-        >
-          <option value="">All Status</option>
-          <option value="negotiation">Negotiation</option>
-          <option value="closed">Closed</option>
-          <option value="cancelled">Cancelled</option>
-        </select>
-        <input
-          type="month"
-          value={filters.month}
-          onChange={e => setFilters(f => ({ ...f, month: e.target.value }))}
-          className="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f]"
-        />
+      <div className="bg-white rounded-xl p-4 shadow-sm mb-6 border border-gray-100">
+        <div className="flex flex-wrap gap-3 items-center">
+          <select
+            value={filters.status}
+            onChange={e => setFilters(f => ({ ...f, status: e.target.value }))}
+            className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] transition-all"
+          >
+            <option value="">All Status</option>
+            <option value="negotiation">Negotiation</option>
+            <option value="closed">Closed</option>
+            <option value="cancelled">Cancelled</option>
+          </select>
+          <input
+            type="month"
+            value={filters.month}
+            onChange={e => setFilters(f => ({ ...f, month: e.target.value }))}
+            className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] transition-all"
+          />
+        </div>
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl shadow overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b text-left text-gray-500 text-xs uppercase tracking-wide">
-              <th className="px-4 py-3">Property</th>
-              <th className="px-4 py-3">Buyer</th>
-              <th className="px-4 py-3">Seller</th>
-              <th className="px-4 py-3">Deal Date</th>
-              <th className="px-4 py-3">Amount</th>
-              <th className="px-4 py-3">Total Brokerage</th>
-              <th className="px-4 py-3">Brokerage Type</th>
-              <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {deals.length === 0 && !loading ? (
-              <tr>
-                <td colSpan={9} className="px-4 py-8 text-center text-gray-400">
-                  No deals found.
-                </td>
+      <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="bg-[#1e3a5f] text-white text-left">
+                <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider">Property</th>
+                <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider">Buyer</th>
+                <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider">Seller</th>
+                <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider">Deal Date</th>
+                <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider">Amount</th>
+                <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider">Total Brokerage</th>
+                <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider">Brokerage Type</th>
+                <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider">Actions</th>
               </tr>
-            ) : (
-              deals.map(deal => (
-                <tr key={deal.id} className="border-b last:border-0 hover:bg-gray-50">
-                  <td className="px-4 py-3 font-medium text-gray-800">
-                    {propertyTitle(deal.property_id)}
-                  </td>
-                  <td className="px-4 py-3 text-gray-600">{customerName(deal.buyer_customer_id)}</td>
-                  <td className="px-4 py-3 text-gray-600">{customerName(deal.seller_customer_id)}</td>
-                  <td className="px-4 py-3 text-gray-600">
-                    {deal.deal_date ? new Date(deal.deal_date).toLocaleDateString('en-IN') : '—'}
-                  </td>
-                  <td className="px-4 py-3 text-gray-800 font-medium">{formatPrice(deal.deal_amount)}</td>
-                  <td className="px-4 py-3 text-gray-800 font-medium">{formatPrice(deal.total_brokerage)}</td>
-                  <td className="px-4 py-3">{brokerageTypeBadge(deal.brokerage_type)}</td>
-                  <td className="px-4 py-3">{statusBadge(deal.status)}</td>
-                  <td className="px-4 py-3">
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => openEdit(deal)}
-                        className="text-xs px-2 py-1 rounded bg-blue-50 text-blue-700 hover:bg-blue-100"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(deal)}
-                        className="text-xs px-2 py-1 rounded bg-red-50 text-red-700 hover:bg-red-100"
-                      >
-                        Delete
-                      </button>
-                    </div>
+            </thead>
+            <tbody>
+              {deals.length === 0 && !loading ? (
+                <tr>
+                  <td colSpan={9} className="px-6 py-8 text-center text-gray-400">
+                    No deals found.
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                deals.map((deal, idx) => (
+                  <tr key={deal.id} className={`hover:bg-blue-50 transition-colors ${idx % 2 === 1 ? 'bg-gray-50/50' : ''}`}>
+                    <td className="px-6 py-4 font-medium text-gray-800">
+                      {propertyTitle(deal.property_id)}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-600">{customerName(deal.buyer_customer_id)}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600">{customerName(deal.seller_customer_id)}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600">
+                      {deal.deal_date ? new Date(deal.deal_date).toLocaleDateString('en-IN') : '—'}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-800 font-medium">{formatPrice(deal.deal_amount)}</td>
+                    <td className="px-6 py-4 text-sm font-bold text-[#f0a500]">{formatPrice(deal.total_brokerage)}</td>
+                    <td className="px-6 py-4">{brokerageTypeBadge(deal.brokerage_type)}</td>
+                    <td className="px-6 py-4">{statusBadge(deal.status)}</td>
+                    <td className="px-6 py-4">
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => openEdit(deal)}
+                          className="p-1.5 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors"
+                          aria-label="Edit"
+                          title="Edit"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => handleDelete(deal)}
+                          className="p-1.5 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 transition-colors"
+                          aria-label="Delete"
+                          title="Delete"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="3 6 5 6 21 6"/>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                          </svg>
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Add / Edit Modal */}

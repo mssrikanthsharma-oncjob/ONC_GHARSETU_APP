@@ -227,124 +227,143 @@ export default function Customers() {
   }
 
   return (
-    <div>
+    <div className="min-h-screen bg-gray-50">
       {loading && <LoadingSpinner fullPage />}
 
       {/* Header */}
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-6">
         <h1 className="text-2xl font-bold text-[#1e3a5f]">Customers</h1>
         <button
           onClick={openAdd}
-          className="bg-[#1e3a5f] text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-[#162d4a] transition-colors"
+          className="bg-[#1e3a5f] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#16305a] transition-colors shadow-sm"
         >
           + Add Customer
         </button>
       </div>
 
       {/* Filter bar */}
-      <div className="flex flex-wrap gap-3 mb-4">
-        <input
-          type="text"
-          placeholder="Search name, phone, email…"
-          value={filters.search}
-          onChange={e => setFilters(f => ({ ...f, search: e.target.value }))}
-          className="border rounded-lg px-3 py-2 text-sm flex-1 min-w-[200px] focus:outline-none focus:ring-2 focus:ring-[#1e3a5f]"
-        />
-        <select
-          value={filters.type}
-          onChange={e => setFilters(f => ({ ...f, type: e.target.value }))}
-          className="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f]"
-        >
-          <option value="">All Types</option>
-          <option value="buyer">Buyer</option>
-          <option value="seller">Seller</option>
-          <option value="both">Both</option>
-        </select>
-        <select
-          value={filters.status}
-          onChange={e => setFilters(f => ({ ...f, status: e.target.value }))}
-          className="border rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f]"
-        >
-          <option value="">All Status</option>
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
-        </select>
+      <div className="bg-white rounded-xl p-4 shadow-sm mb-6 border border-gray-100">
+        <div className="flex flex-wrap gap-3 items-center">
+          <input
+            type="text"
+            placeholder="Search name, phone, email…"
+            value={filters.search}
+            onChange={e => setFilters(f => ({ ...f, search: e.target.value }))}
+            className="border border-gray-300 rounded-lg px-3 py-2 text-sm flex-1 min-w-[200px] focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] transition-all"
+          />
+          <select
+            value={filters.type}
+            onChange={e => setFilters(f => ({ ...f, type: e.target.value }))}
+            className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] transition-all"
+          >
+            <option value="">All Types</option>
+            <option value="buyer">Buyer</option>
+            <option value="seller">Seller</option>
+            <option value="both">Both</option>
+          </select>
+          <select
+            value={filters.status}
+            onChange={e => setFilters(f => ({ ...f, status: e.target.value }))}
+            className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f] transition-all"
+          >
+            <option value="">All Status</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+          </select>
+        </div>
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl shadow overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b text-left text-gray-500 text-xs uppercase tracking-wide">
-              <th className="px-4 py-3">Name</th>
-              <th className="px-4 py-3">Phone</th>
-              <th className="px-4 py-3">Email</th>
-              <th className="px-4 py-3">Type</th>
-              <th className="px-4 py-3">Budget Range</th>
-              <th className="px-4 py-3">Status</th>
-              <th className="px-4 py-3">Last Updated</th>
-              <th className="px-4 py-3">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {customers.length === 0 && !loading ? (
-              <tr>
-                <td colSpan={8} className="px-4 py-8 text-center text-gray-400">
-                  No customers found.
-                </td>
+      <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-100">
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="bg-[#1e3a5f] text-white text-left">
+                <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider">Name</th>
+                <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider">Phone</th>
+                <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider">Email</th>
+                <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider">Type</th>
+                <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider">Budget Range</th>
+                <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider">Status</th>
+                <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider">Last Updated</th>
+                <th className="px-6 py-3 text-xs font-semibold uppercase tracking-wider">Actions</th>
               </tr>
-            ) : (
-              customers.map(c => (
-                <tr key={c.id} className="border-b last:border-0 hover:bg-gray-50">
-                  <td className="px-4 py-3 font-medium text-gray-800">
-                    <span>{c.name}</span>
-                    {isOverdue(c.updated_at) && (
-                      <span className="ml-2 bg-yellow-100 text-yellow-700 text-xs px-2 py-0.5 rounded-full">
-                        ⏰ Follow up
-                      </span>
-                    )}
-                  </td>
-                  <td className="px-4 py-3 text-gray-600">{c.phone}</td>
-                  <td className="px-4 py-3 text-gray-600">{c.email || '—'}</td>
-                  <td className="px-4 py-3">{typeBadge(c.type)}</td>
-                  <td className="px-4 py-3 text-gray-600">
-                    {c.budget_min || c.budget_max
-                      ? `${formatBudget(c.budget_min)} – ${formatBudget(c.budget_max)}`
-                      : '—'}
-                  </td>
-                  <td className="px-4 py-3">{statusBadge(c.status)}</td>
-                  <td className="px-4 py-3 text-gray-500">
-                    {c.updated_at ? new Date(c.updated_at).toLocaleDateString('en-IN') : '—'}
-                  </td>
-                  <td className="px-4 py-3">
-                    <div className="flex gap-2 flex-wrap">
-                      <button
-                        onClick={() => openEdit(c)}
-                        className="text-xs px-2 py-1 rounded bg-blue-50 text-blue-700 hover:bg-blue-100"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() => handleDelete(c)}
-                        className="text-xs px-2 py-1 rounded bg-red-50 text-red-700 hover:bg-red-100"
-                      >
-                        Delete
-                      </button>
-                      {(c.type === 'buyer' || c.type === 'both') && (
-                        <button
-                          onClick={() => navigate(`/matchmaking?buyer_id=${c.id}`)}
-                          className="text-xs px-2 py-1 rounded bg-green-50 text-green-700 hover:bg-green-100"
-                        >
-                          Find Matches
-                        </button>
-                      )}
-                    </div>
+            </thead>
+            <tbody>
+              {customers.length === 0 && !loading ? (
+                <tr>
+                  <td colSpan={8} className="px-6 py-8 text-center text-gray-400">
+                    No customers found.
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : (
+                customers.map((c, idx) => (
+                  <tr key={c.id} className={`hover:bg-blue-50 transition-colors ${idx % 2 === 1 ? 'bg-gray-50/50' : ''}`}>
+                    <td className="px-6 py-4 font-medium text-gray-800">
+                      <span>{c.name}</span>
+                      {isOverdue(c.updated_at) && (
+                        <span className="ml-2 bg-yellow-100 text-yellow-700 text-xs px-2 py-0.5 rounded-full">
+                          ⏰ Follow up
+                        </span>
+                      )}
+                    </td>
+                    <td className="px-6 py-4 text-sm text-gray-600">{c.phone}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600">{c.email || '—'}</td>
+                    <td className="px-6 py-4">{typeBadge(c.type)}</td>
+                    <td className="px-6 py-4 text-sm text-gray-600">
+                      {c.budget_min || c.budget_max
+                        ? `${formatBudget(c.budget_min)} – ${formatBudget(c.budget_max)}`
+                        : '—'}
+                    </td>
+                    <td className="px-6 py-4">{statusBadge(c.status)}</td>
+                    <td className="px-6 py-4 text-sm text-gray-500">
+                      {c.updated_at ? new Date(c.updated_at).toLocaleDateString('en-IN') : '—'}
+                    </td>
+                    <td className="px-6 py-4">
+                      <div className="flex gap-2 items-center">
+                        <button
+                          onClick={() => openEdit(c)}
+                          className="p-1.5 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 transition-colors"
+                          aria-label="Edit"
+                          title="Edit"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                            <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                          </svg>
+                        </button>
+                        <button
+                          onClick={() => handleDelete(c)}
+                          className="p-1.5 rounded-lg bg-red-50 text-red-700 hover:bg-red-100 transition-colors"
+                          aria-label="Delete"
+                          title="Delete"
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <polyline points="3 6 5 6 21 6"/>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                          </svg>
+                        </button>
+                        {(c.type === 'buyer' || c.type === 'both') && (
+                          <button
+                            onClick={() => navigate(`/matchmaking?buyer_id=${c.id}`)}
+                            className="p-1.5 rounded-lg bg-green-50 text-green-700 hover:bg-green-100 transition-colors"
+                            aria-label="Find Matches"
+                            title="Find Matches"
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                              <circle cx="11" cy="11" r="8"/>
+                              <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                            </svg>
+                          </button>
+                        )}
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Add / Edit Modal */}
