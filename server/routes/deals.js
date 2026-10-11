@@ -102,6 +102,127 @@ router.get('/', (req, res) => {
   }
 });
 
+// GET /api/deals/dashboard-stats
+router.get('/dashboard-stats', (req, res) => {
+  try {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    const currentMonth = now.getMonth(); // 0-indexed
+
+    // --- KPIs ---
+    const monthStr = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}`;
+
+    const dealsThisMonthRow = db.prepare(
+      `SELECT COUNT(*) as cnt FROM deals WHERE strftime('%Y-%m', deal_date) = ?`
+    ).get(monthStr);
+
+    const brokerageThisMonthRow = db.prepare(
+      `SELECT IFNULL(SUM(CAST(total_brokerage_amount AS REAL)), 0) as total FROM deals WHERE strftime('%Y-%m', deal_date) = ?`
+    ).get(monthStr);
+
+    const brokerageAllTimeRow = db.prepare(
+      `SELECT IFNULL(SUM(CAST(total_brokerage_amount AS REAL)), 0) as total FROM deals`
+    ).get();
+
+    const totalDealsRow = db.prepare(`SELECT COUNT(*) as cnt FROM deals`).get();
+
+    const dealsClosedRow = db.prepare(
+      `SELECT COUNT(*) as cnt FROM deals WHERE status = 'completed'`
+    ).get();
+
+    const dealsNegotiationRow = db.prepare(
+      `SELECT COUNT(*) as cnt FROM deals WHERE status = 'in_progress'`
+    ).get();
+
+    // --- Monthly brokerage for last 6 months ---
+    const monthLabels = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const monthly_brokerage = [];
+    for (let i = 5; i >= 0; i--) {
+      const d = new Date(currentYear, currentMonth - i, 1);
+      const yr = d.getFullYear();
+      const mo = d.getMonth();
+      const key = `${yr}-${String(mo + 1).padStart(2, '0')}`;
+      const shortYear = String(yr).slice(-2);
+      const label = `${monthLabels[mo]} '${shortYear}`;
+      const row = db.prepare(
+        `SELECT IFNULL(SUM(CAST(total_brokerage_amount AS REAL)), 0) as total FROM deals WHERE strftime('%Y-%m', deal_date) = ?`
+      ).get(key);
+      monthly_brokerage.push({ month: key, label, total: row.total || 0 });
+    }
+
+    // --- Recent deals (last 5) ---
+    const recent_deals = db.prepare(`
+      SELECT d.id, d.deal_date, d.deal_amount, d.total_brokerage_amount, d.status, d.brokerage_type,
+             p.title as property_title, p.locality as property_locality,
+             buyers.name as buyer_name, sellers.name as seller_name
+      FROM deals d
+      LEFT JOIN properties p ON d.property_id = p.id
+      LEFT JOIN customers AS buyers ON d.buyer_id = buyers.id
+      LEFT JOIN customers AS sellers ON d.seller_id = sellers.id
+      ORDER BY d.deal_date DESC
+      LIMIT 5
+    `).all();
+
+    // --- Top localities ---
+    const top_localities = db.prepare(`
+      SELECT p.locality as locality, COUNT(*) as deal_count,
+             IFNULL(SUM(CAST(d.total_brokerage_amount AS REAL)), 0) as total_brokerage
+      FROM deals d
+      JOIN properties p ON d.property_id = p.id
+      WHERE p.locality IS NOT NULL AND p.locality != ''
+      GROUP BY p.locality
+      ORDER BY deal_count DESC
+      LIMIT 5
+    `).all();
+
+    // --- Property status breakdown ---
+    const propAvailRow = db.prepare(`SELECT COUNT(*) as cnt FROM properties WHERE status = 'available'`).get();
+    const propPendingRow = db.prepare(`SELECT COUNT(*) as cnt FROM properties WHERE status = 'pending'`).get();
+    const propSoldRow = db.prepare(`SELECT COUNT(*) as cnt FROM properties WHERE status = 'sold'`).get();
+
+    // --- Customer type breakdown ---
+    const custBuyerRow = db.prepare(`SELECT COUNT(*) as cnt FROM customers WHERE type = 'buyer'`).get();
+    const custSellerRow = db.prepare(`SELECT COUNT(*) as cnt FROM customers WHERE type = 'seller'`).get();
+    const custBothRow = db.prepare(`SELECT COUNT(*) as cnt FROM customers WHERE type = 'both'`).get();
+
+    // --- Follow-up needed (not updated in 30 days) ---
+    const followup_needed = db.prepare(`
+      SELECT id, name, phone, type, updated_at
+      FROM customers
+      WHERE updated_at < datetime('now', '-30 days')
+      ORDER BY updated_at ASC
+      LIMIT 5
+    `).all();
+
+    res.json({
+      kpis: {
+        deals_this_month: dealsThisMonthRow.cnt || 0,
+        brokerage_this_month: brokerageThisMonthRow.total || 0,
+        brokerage_all_time: brokerageAllTimeRow.total || 0,
+        total_deals: totalDealsRow.cnt || 0,
+        deals_closed: dealsClosedRow.cnt || 0,
+        deals_in_negotiation: dealsNegotiationRow.cnt || 0
+      },
+      monthly_brokerage,
+      recent_deals,
+      top_localities,
+      property_status_breakdown: {
+        available: propAvailRow.cnt || 0,
+        pending: propPendingRow.cnt || 0,
+        sold: propSoldRow.cnt || 0
+      },
+      customer_type_breakdown: {
+        buyer: custBuyerRow.cnt || 0,
+        seller: custSellerRow.cnt || 0,
+        both: custBothRow.cnt || 0
+      },
+      followup_needed
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // GET /api/deals/:id
 router.get('/:id', (req, res) => {
   try {

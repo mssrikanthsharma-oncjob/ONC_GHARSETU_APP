@@ -25,3 +25,8 @@ export const deleteDeal = (id) => api.delete(`/deals/${id}`).then(r => r.data)
 
 export const getSettings = () => api.get('/settings').then(r => r.data)
 export const saveSettings = (data) => api.put('/settings', data).then(r => r.data)
+
+export async function getDashboardStats() {
+  const res = await api.get('/deals/dashboard-stats');
+  return res.data;
+}
