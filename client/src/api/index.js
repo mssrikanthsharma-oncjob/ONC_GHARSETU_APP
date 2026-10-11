@@ -1,12 +1,8 @@
 import axios from 'axios'
 
-// In production (Vercel), VITE_API_URL points to the Railway server.
+// Both client and server are on the same domain in production.
 // In development, the Vite proxy handles /api → localhost:3001.
-const baseURL = import.meta.env.VITE_API_URL
-  ? `${import.meta.env.VITE_API_URL}/api`
-  : '/api'
-
-const api = axios.create({ baseURL })
+const api = axios.create({ baseURL: '/api' })
 
 export const getCustomers = (params = {}) => api.get('/customers', { params }).then(r => r.data)
 export const getCustomer = (id) => api.get(`/customers/${id}`).then(r => r.data)

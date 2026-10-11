@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 
 const customersRouter = require('./routes/customers');
 const propertiesRouter = require('./routes/properties');
@@ -24,6 +25,14 @@ app.use('/api/settings', settingsRouter);
 // Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+// Serve React client in production
+const clientDist = path.join(__dirname, '../client/dist');
+app.use(express.static(clientDist));
+// All non-API routes return the React app (for client-side routing)
+app.get('*', (req, res) => {
+  res.sendFile(path.join(clientDist, 'index.html'));
 });
 
 app.listen(PORT, () => {
